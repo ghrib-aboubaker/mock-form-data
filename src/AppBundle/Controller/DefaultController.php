@@ -22,7 +22,15 @@ class DefaultController extends Controller
         $generatedData = $mock->generateFormData();
         $isJson = empty($generatedData);
 
-        return new JsonResponse($isJson ? '{}' : $generatedData, 200, ['Content-Type' => 'application/json'], $isJson);
+        return new JsonResponse(
+            $isJson ? '{}' : $generatedData,
+            200,
+            [
+                'Content-Type' => 'application/json',
+                'Access-Control-Allow-Origin' => '*'
+            ],
+            $isJson
+        );
     }
 
     /**
