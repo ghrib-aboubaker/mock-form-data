@@ -35,10 +35,21 @@ class DefaultController extends Controller
 
     /**
      * @Route("/post-data", name="post_form_data")
-     * @Method("POST")
+     * @Method({"OPTIONS", "POST"})
      */
     public function postDataAction(Request $request)
     {
+        if ($request->isMethod('OPTIONS')) {
+            return new Response(
+                '',
+                200,
+                [
+                    'Access-Control-Allow-Origin'  => '*',
+                    'Access-Control-Allow-Methods' => 'POST, OPTIONS'
+                ]
+            );
+        }
+
         $contentType = $request->getContentType();
 
         if ($contentType === 'json') {
@@ -52,6 +63,13 @@ class DefaultController extends Controller
         $logger = $this->get('app.form.data.logger');
         $logger->info(json_encode($postData, JSON_PRETTY_PRINT));
 
-        return new JsonResponse($postData);
+        return new JsonResponse(
+            $postData,
+            200,
+            [
+                'Content-Type' => 'application/json',
+                'Access-Control-Allow-Origin' => '*'
+            ]
+        );
     }
 }
